@@ -1,0 +1,14 @@
+{
+   "ActiveEmotionalView":"Default View",
+   "Default View_ScaleFactor":"1.5",
+   "Default View_TopLeft":"-364,185",
+   "ExpandedHierarchyInLayout":"",
+   "guistr":"# # String gsaved with Nlview 7.8.0 2024-04-26 e1825d835c VDI=44 GEI=38 GUI=JA:21.0
+#  -string -flagsOSRD
+preplace inst udp_stack_top_0 -pg 1 -lvl 1 -x 190 -y 160 -defaultsOSRD
+preplace inst xxv_ethernet_0 -pg 1 -lvl 1 -x 190 -y 530 -defaultsOSRD
+levelinfo -pg 1 0 190 380
+pagesize -pg 1 -db -bbox -sgen 0 0 380 760
+"
+}
+
