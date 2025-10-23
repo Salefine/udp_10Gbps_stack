@@ -41,7 +41,7 @@ arp packet
 \/
 mac packet
 +----------------+----------------+----------+-----------------------------------+----------+
-|  目标MAC地址   |   源MAC地址    | 类型字段 |             数据部分              | 帧校验序列 |
+|  目标MAC地址   |   源MAC地址    | 类型字段 |             数据部分              | 帧校验序�? |
 |   (6字节)      |    (6字节)     | (2字节)  |            (46-1500字节)          |  (4字节)  |
 +----------------+----------------+----------+-----------------------------------+----------+
 | FF:FF:FF:FF:FF:FF | AC:14:45:FF:AF:C4 |  0x0806  | [ARP请求数据包] + 填充           | [CRC32]  |
@@ -183,17 +183,17 @@ initial begin
     Please help us improve the depth and quality of information on this wiki. You may provide us feedback by sending email to wiki-help @ xilinx.com.
  *******************************************************************************/
     #(`CLOCK_PERIOD * 20)
-    fd = $fopen("../../../../../../udp-tx-data.bin", "rb");
+    fd = $fopen("../../../../../../../udp-tx-data.bin", "rb");
     if (fd == 0) begin
         $display("Failed to open file!");
         $finish;
     end
-    fc = $fopen("../../../../../../mac-tx-data.bin", "wb");
+    fc = $fopen("../../../../../../../mac-tx-data.bin", "wb");
     if (fc == 0) begin
         $display("Failed to open mac-tx-data.bin!");
         $finish;
     end
-    // 循环帧发送，长度从1累加到20
+    // 循环帧发送，长度�?1累加�?20
     for (frame_idx = 1; frame_idx <= 20; frame_idx = frame_idx + 1) begin
         for (word_idx = 1; word_idx <= frame_idx; word_idx = word_idx + 1) begin
      
@@ -220,7 +220,7 @@ initial begin
  * test udp rx
  *   
  *******************************************************************************/
-    fe = $fopen("../../../../../../mac-rx-reply.bin", "rb");
+    fe = $fopen("../../../../../../../mac-rx-reply.bin", "rb");
     if(fe == 0)begin
         $display("Failed to open file!");
         $finish;
@@ -228,7 +228,7 @@ initial begin
 
     #(`CLOCK_PERIOD * 20)begin
         for (frame_idx = 1; frame_idx <= 20; frame_idx = frame_idx + 1) begin
-            if(frame_idx >= 1 && frame_idx <= 2 )begin
+            if(frame_idx == 1 )begin
                 for (word_idx = 1; word_idx <= frame_idx + 6; word_idx = word_idx + 1)begin
                     r = $fread(data_buf, fe);
                     @(posedge tx_axis_aclk);
@@ -242,7 +242,7 @@ initial begin
                 mac_rx_axis_tvalid <= 0;
                 mac_rx_axis_tlast  <= 0;
             end
-            else begin 
+            else if(frame_idx >1 && frame_idx <= 5)begin 
                 for (word_idx = 1; word_idx <= 8; word_idx = word_idx + 1)begin
                     r = $fread(data_buf, fe);
                     @(posedge tx_axis_aclk);
@@ -256,7 +256,91 @@ initial begin
                 mac_rx_axis_tvalid <= 0;
                 mac_rx_axis_tlast  <= 0;
             end
+            else if(frame_idx >5 && frame_idx <= 7)begin 
+                for (word_idx = 1; word_idx <= 9; word_idx = word_idx + 1)begin
+                    r = $fread(data_buf, fe);
+                    @(posedge tx_axis_aclk);
+                    mac_rx_axis_tdata <= {data_buf[7:0]  ,data_buf[15:8], data_buf[23:16],data_buf[31:24],
+                                          data_buf[39:32],data_buf[47:40],data_buf[55:48],data_buf[63:56]};
+                    mac_rx_axis_tkeep <= 8'hff;
+                    mac_rx_axis_tvalid<= 1;
+                    mac_rx_axis_tlast <= (word_idx == 9) ? 1'b1 : 1'b0;
+                end
+                @(posedge tx_axis_aclk);
+                mac_rx_axis_tvalid <= 0;
+                mac_rx_axis_tlast  <= 0;
+            end
+            else if(frame_idx == 8 || frame_idx == 9)begin 
+                for (word_idx = 1; word_idx <= 10; word_idx = word_idx + 1)begin
+                    r = $fread(data_buf, fe);
+                    @(posedge tx_axis_aclk);
+                    mac_rx_axis_tdata <= {data_buf[7:0]  ,data_buf[15:8], data_buf[23:16],data_buf[31:24],
+                                          data_buf[39:32],data_buf[47:40],data_buf[55:48],data_buf[63:56]};
+                    mac_rx_axis_tkeep <= 8'hff;
+                    mac_rx_axis_tvalid<= 1;
+                    mac_rx_axis_tlast <= (word_idx == 10) ? 1'b1 : 1'b0;
+                end
+                @(posedge tx_axis_aclk);
+                mac_rx_axis_tvalid <= 0;
+                mac_rx_axis_tlast  <= 0;
+            end
+            else if(frame_idx == 10)begin 
+                for (word_idx = 1; word_idx <= 11; word_idx = word_idx + 1)begin
+                    r = $fread(data_buf, fe);
+                    @(posedge tx_axis_aclk);
+                    mac_rx_axis_tdata <= {data_buf[7:0]  ,data_buf[15:8], data_buf[23:16],data_buf[31:24],
+                                          data_buf[39:32],data_buf[47:40],data_buf[55:48],data_buf[63:56]};
+                    mac_rx_axis_tkeep <= 8'hff;
+                    mac_rx_axis_tvalid<= 1;
+                    mac_rx_axis_tlast <= (word_idx == 11) ? 1'b1 : 1'b0;
+                end
+                @(posedge tx_axis_aclk);
+                mac_rx_axis_tvalid <= 0;
+                mac_rx_axis_tlast  <= 0;
+            end
 
+            else if(frame_idx == 11)begin 
+                for (word_idx = 1; word_idx <= 14; word_idx = word_idx + 1)begin
+                    r = $fread(data_buf, fe);
+                    @(posedge tx_axis_aclk);
+                    mac_rx_axis_tdata <= {data_buf[7:0]  ,data_buf[15:8], data_buf[23:16],data_buf[31:24],
+                                          data_buf[39:32],data_buf[47:40],data_buf[55:48],data_buf[63:56]};
+                    mac_rx_axis_tkeep <= 8'hff;
+                    mac_rx_axis_tvalid<= 1;
+                    mac_rx_axis_tlast <= (word_idx == 14) ? 1'b1 : 1'b0;
+                end
+                @(posedge tx_axis_aclk);
+                mac_rx_axis_tvalid <= 0;
+                mac_rx_axis_tlast  <= 0;
+            end
+            else if(frame_idx == 12)begin 
+                for (word_idx = 1; word_idx <= 13; word_idx = word_idx + 1)begin
+                    r = $fread(data_buf, fe);
+                    @(posedge tx_axis_aclk);
+                    mac_rx_axis_tdata <= {data_buf[7:0]  ,data_buf[15:8], data_buf[23:16],data_buf[31:24],
+                                          data_buf[39:32],data_buf[47:40],data_buf[55:48],data_buf[63:56]};
+                    mac_rx_axis_tkeep <= 8'hff;
+                    mac_rx_axis_tvalid<= 1;
+                    mac_rx_axis_tlast <= (word_idx == 13) ? 1'b1 : 1'b0;
+                end
+                @(posedge tx_axis_aclk);
+                mac_rx_axis_tvalid <= 0;
+                mac_rx_axis_tlast  <= 0;
+            end
+            else if(frame_idx ==13)begin 
+                for (word_idx = 1; word_idx <= 12; word_idx = word_idx + 1)begin
+                    r = $fread(data_buf, fe);
+                    @(posedge tx_axis_aclk);
+                    mac_rx_axis_tdata <= {data_buf[7:0]  ,data_buf[15:8], data_buf[23:16],data_buf[31:24],
+                                          data_buf[39:32],data_buf[47:40],data_buf[55:48],data_buf[63:56]};
+                    mac_rx_axis_tkeep <= 8'hff;
+                    mac_rx_axis_tvalid<= 1;
+                    mac_rx_axis_tlast <= (word_idx == 12) ? 1'b1 : 1'b0;
+                end
+                @(posedge tx_axis_aclk);
+                mac_rx_axis_tvalid <= 0;
+                mac_rx_axis_tlast  <= 0;
+            end
         end
         $fclose(fe);
     end
@@ -268,11 +352,10 @@ end
  *******************************************************************************/
 always @(posedge tx_axis_aclk) begin
     if (!tx_axis_aresetn) begin
-        // 可选：复位处理
+
     end else begin
         if (mac_tx_axis_tvalid & udp_enable) begin
-            // 写入文件，每拍 8 字节，大端序
-            // $fwrite 逐字节写入
+    
             for (i = 7; i >= 0; i = i - 1) begin
                 $fwrite(fc, "%c", mac_tx_axis_tdata[i*8 +: 8]);
             end
