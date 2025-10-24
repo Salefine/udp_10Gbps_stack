@@ -2,7 +2,7 @@ import struct
 from pathlib import Path
 
 # 输出文件
-udp_tx_path = Path("./udp-tx-data.bin")
+udp_tx_path = Path("./python/udp-tx-data.bin")
 
 # 待写入文本
 text = """Welcome to the Xilinx Wiki!

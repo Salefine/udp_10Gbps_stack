@@ -183,17 +183,17 @@ initial begin
     Please help us improve the depth and quality of information on this wiki. You may provide us feedback by sending email to wiki-help @ xilinx.com.
  *******************************************************************************/
     #(`CLOCK_PERIOD * 20)
-    fd = $fopen("../../../../../../../udp-tx-data.bin", "rb");
+    fd = $fopen("../../../../../../../python/udp-tx-data.bin", "rb");
     if (fd == 0) begin
         $display("Failed to open file!");
         $finish;
     end
-    fc = $fopen("../../../../../../../mac-tx-data.bin", "wb");
+    fc = $fopen("../../../../../../../python/mac-tx-data.bin", "wb");
     if (fc == 0) begin
         $display("Failed to open mac-tx-data.bin!");
         $finish;
     end
-    // 循环帧发送，长度�?1累加�?20
+    // 
     for (frame_idx = 1; frame_idx <= 20; frame_idx = frame_idx + 1) begin
         for (word_idx = 1; word_idx <= frame_idx; word_idx = word_idx + 1) begin
      
@@ -220,7 +220,7 @@ initial begin
  * test udp rx
  *   
  *******************************************************************************/
-    fe = $fopen("../../../../../../../mac-rx-reply.bin", "rb");
+    fe = $fopen("../../../../../../../python/mac-rx-reply.bin", "rb");
     if(fe == 0)begin
         $display("Failed to open file!");
         $finish;
